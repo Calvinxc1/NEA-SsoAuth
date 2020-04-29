@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+    sde:
+        image: nea-sso_auth
+        build:
+            context: ./
+            dockerfile: ./dev.Dockerfile
+        container_name: nea-sso_auth
+        volumes:
+        - ./config/config.py:/srv/app/config/config.py
+        - ./config/gunicorn.py:/srv/app/config/gunicorn.py
+        networks:
+        - karan.local.newedenanalytics.net
+        restart: unless-stopped
+        
+networks:
+    karan.local.newedenanalytics.net:
+        external: true
