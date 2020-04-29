@@ -8,7 +8,6 @@ class TokenTimer:
     def __init__(self, mongo_params, sso_auth):
         self.mongo_params = mongo_params
         self.sso_auth = sso_auth
-        self.sleep_until = dt.utcnow()
         self.active = True
         self.interval_minutes = 15
         
@@ -16,16 +15,13 @@ class TokenTimer:
         while self.active:
             self._sleep_until_next()
             TokenRefresher(self.mongo_params, self.sso_auth).refresh_tokens()
-            
-    @classmethod
-    def run_from_process(cls, mongo_params, sso_auth):
-        cls(mongo_params, sso_auth).run()
         
     def _sleep_until_next(self):
         now, sleep_until, sleep_for = self._next_sleep()
+        sleep(sleep_for)
         while now < sleep_until:
-            if sleep_for > 0: sleep(sleep_for)
-            now, sleep_until, sleep_for = self._next_sleep()
+            sleep(1)
+            now = dt.utcnow()
             
     def _next_sleep(self):
         now = dt.utcnow()

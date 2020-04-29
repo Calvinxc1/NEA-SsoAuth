@@ -9,6 +9,8 @@ WORKDIR /srv/app
 COPY ./ ./NEA-SsoAuth/
 RUN python -m pip install --no-cache-dir ./NEA-SsoAuth \
     && rm -rf ./NEA-SsoAuth
+    
+COPY ./refresher.py ./
 
 VOLUME /srv/app/config.py
 VOLUME /srv/app/gunicorn.py

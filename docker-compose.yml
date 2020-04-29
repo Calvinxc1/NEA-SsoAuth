@@ -1,18 +1,31 @@
 version: '3.7'
 
 services:
-    sde:
+    api:
         image: nea-sso_auth
         build:
             context: ./
             dockerfile: ./dev.Dockerfile
-        container_name: nea-sso_auth
+        container_name: nea-sso_auth_api
         volumes:
         - ./config/config.py:/srv/app/config/config.py
         - ./config/gunicorn.py:/srv/app/config/gunicorn.py
         networks:
         - karan.local.newedenanalytics.net
         restart: unless-stopped
+    
+    refresher:
+        image: nea-sso_auth
+        build:
+            context: ./
+            dockerfile: ./dev.Dockerfile
+        container_name: nea-sso_auth_refresh
+        volumes:
+        - ./config/config.py:/srv/app/config/config.py
+        networks:
+        - karan.local.newedenanalytics.net
+        restart: unless-stopped
+        command: ["python", "refresher.py"]
         
 networks:
     karan.local.newedenanalytics.net:
